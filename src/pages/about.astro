@@ -1,0 +1,105 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout 
+  title="About | Alex Baro"
+  description="Alex Baro is a comedy director and filmmaker based in London. Get in touch for collaborations and projects."
+>
+  <div class="about-page">
+    <div class="about-content">
+      <section class="about-section">
+        <h2>About</h2>
+        <p>
+          Alex Baro is a comedy director and filmmaker based in London. 
+          With a passion for storytelling and visual comedy, Alex creates 
+          engaging short films, promotional content, and branded videos.
+        </p>
+      </section>
+      
+      <section class="contact-section">
+        <h2>Contact</h2>
+        <p>
+          For inquiries about projects, collaborations, or just to say hello, 
+          please get in touch.
+        </p>
+        <div class="contact-links">
+          <a href="mailto:hello@alexbaro.com" class="contact-link">
+            hello@alexbaro.com
+          </a>
+        </div>
+      </section>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .about-page {
+    padding: 40px 0;
+    max-width: 800px;
+  }
+  
+  .about-content {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+  }
+  
+  .about-section,
+  .contact-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  h2 {
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin-bottom: 8px;
+  }
+  
+  p {
+    color: var(--color-text-secondary);
+    font-size: 18px;
+    line-height: 1.7;
+  }
+  
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  
+  .contact-link {
+    color: var(--color-text);
+    font-size: 18px;
+    text-decoration: underline;
+    transition: color 0.2s ease;
+  }
+  
+  .contact-link:hover {
+    color: var(--color-text-secondary);
+  }
+  
+  @media (max-width: 932px) {
+    .about-page {
+      padding: 20px 5%;
+    }
+  }
+  
+  @media (max-width: 540px) {
+    h2 {
+      font-size: 20px;
+    }
+    
+    p {
+      font-size: 16px;
+    }
+    
+    .contact-link {
+      font-size: 16px;
+    }
+  }
+</style>

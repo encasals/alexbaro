@@ -1,0 +1,43 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { projects } from '../data/projects';
+---
+
+<Layout 
+  title="Alex Baro | Comedy Director"
+  description="Alex Baro is a comedy director and filmmaker based in London, creating short films, promos, and branded content."
+  preloadImage="/images/covers/01-falling-out.png"
+>
+  <div class="project-covers">
+    {projects.map((project, index) => (
+      <ProjectCard 
+        slug={project.slug}
+        title={project.title}
+        coverImage={project.coverImage}
+        priority={index < 6}
+      />
+    ))}
+  </div>
+</Layout>
+
+<style>
+  .project-covers {
+    display: flex;
+    flex-wrap: wrap;
+    padding-bottom: 0;
+    padding-top: 0;
+  }
+  
+  @media (max-width: 932px) {
+    .project-covers {
+      padding: 0 5%;
+    }
+  }
+  
+  @media (max-width: 540px) {
+    .project-covers {
+      padding: 0 5%;
+    }
+  }
+</style>
