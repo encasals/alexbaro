@@ -1,0 +1,198 @@
+---
+interface Props {
+  type: 'youtube' | 'vimeo';
+  videoId: string;
+  title: string;
+  thumbnailUrl?: string;
+}
+
+const { type, videoId, title, thumbnailUrl } = Astro.props;
+
+// Generate thumbnail URL if not provided
+let thumbnail = thumbnailUrl;
+if (!thumbnail) {
+  if (type === 'youtube') {
+    // Use maxresdefault for highest quality, falls back to hqdefault
+    thumbnail = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
+  } else if (type === 'vimeo') {
+    // Vimeo thumbnails require API call, so we'll use a placeholder approach
+    // The actual thumbnail will be set via JavaScript for Vimeo
+    thumbnail = '';
+  }
+}
+
+const embedUrl = type === 'youtube' 
+  ? `https://www.youtube.com/embed/${videoId}?autoplay=1`
+  : `https://player.vimeo.com/video/${videoId}?autoplay=1&title=0&byline=0&portrait=0`;
+---
+
+<div 
+  class="video-facade" 
+  data-type={type}
+  data-video-id={videoId}
+  data-embed-url={embedUrl}
+>
+  {type === 'youtube' && thumbnail && (
+    <img 
+      src={thumbnail}
+      alt={`Play ${title}`}
+      class="video-thumbnail"
+      loading="lazy"
+      decoding="async"
+    />
+  )}
+  
+  {type === 'vimeo' && (
+    <div class="vimeo-thumbnail" data-vimeo-id={videoId}>
+      <div class="thumbnail-placeholder"></div>
+    </div>
+  )}
+  
+  <button class="play-button" aria-label={`Play ${title}`}>
+    <svg viewBox="0 0 68 48" width="68" height="48">
+      <path class="play-bg" d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z" fill="#212121" fill-opacity="0.8"></path>
+      <path d="M 45,24 27,14 27,34" fill="#fff"></path>
+    </svg>
+  </button>
+</div>
+
+<style>
+  .video-facade {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    background: #000;
+    overflow: hidden;
+  }
+  
+  .video-thumbnail,
+  .vimeo-thumbnail {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: auto;
+    min-height: 100%;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+  }
+  
+  .vimeo-thumbnail {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .vimeo-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .thumbnail-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  }
+  
+  .play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    z-index: 1;
+  }
+  
+  .play-button:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+  
+  .play-button:hover .play-bg {
+    fill: #f00;
+    fill-opacity: 1;
+  }
+  
+  .video-facade:hover .play-button {
+    opacity: 1;
+  }
+  
+  /* Hide facade when iframe is loaded */
+  .video-facade.loaded {
+    display: none;
+  }
+</style>
+
+<script>
+  function initVideoFacades() {
+    const facades = document.querySelectorAll('.video-facade');
+    
+    facades.forEach((facade) => {
+      const type = facade.getAttribute('data-type');
+      const videoId = facade.getAttribute('data-video-id');
+      const embedUrl = facade.getAttribute('data-embed-url');
+      
+      // Load Vimeo thumbnail via oEmbed API
+      if (type === 'vimeo') {
+        const vimeoThumb = facade.querySelector('.vimeo-thumbnail');
+        if (vimeoThumb) {
+          fetch(`https://vimeo.com/api/oembed.json?url=https://vimeo.com/${videoId}`)
+            .then(res => res.json())
+            .then(data => {
+              if (data.thumbnail_url) {
+                // Get larger thumbnail by modifying the URL
+                const largeThumbnail = data.thumbnail_url.replace(/_\d+x\d+/, '_1280x720');
+                const img = document.createElement('img');
+                img.src = largeThumbnail;
+                img.alt = 'Video thumbnail';
+                img.loading = 'lazy';
+                img.decoding = 'async';
+                const placeholder = vimeoThumb.querySelector('.thumbnail-placeholder');
+                if (placeholder) {
+                  placeholder.replaceWith(img);
+                }
+              }
+            })
+            .catch(() => {
+              // Keep placeholder on error
+            });
+        }
+      }
+      
+      // Handle click to load the actual embed
+      facade.addEventListener('click', () => {
+        const container = facade.parentElement;
+        if (!container) return;
+        
+        const iframe = document.createElement('iframe');
+        iframe.src = embedUrl || '';
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('allowfullscreen', '');
+        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+        iframe.className = 'video-embed';
+        iframe.title = 'Video player';
+        
+        // Add iframe styles
+        iframe.style.position = 'absolute';
+        iframe.style.top = '0';
+        iframe.style.left = '0';
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        
+        container.appendChild(iframe);
+        facade.classList.add('loaded');
+      });
+    });
+  }
+  
+  // Initialize on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initVideoFacades);
+  } else {
+    initVideoFacades();
+  }
+</script>

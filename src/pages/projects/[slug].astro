@@ -1,6 +1,7 @@
 ---
 import { Image, getImage } from 'astro:assets';
 import Layout from '../../layouts/Layout.astro';
+import VideoFacade from '../../components/VideoFacade.astro';
 import { projects, getProjectBySlug } from '../../data/projects';
 import type { GetStaticPaths } from 'astro';
 
@@ -127,27 +128,21 @@ const breadcrumbSchema = {
       
       {project.youtubeId && (
         <div class="video-container">
-          <iframe
-            src={`https://www.youtube.com/embed/${project.youtubeId}`}
+          <VideoFacade 
+            type="youtube" 
+            videoId={project.youtubeId} 
             title={project.title}
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-            class="video-embed"
-          ></iframe>
+          />
         </div>
       )}
       
       {project.vimeoId && (
         <div class="video-container">
-          <iframe
-            src={`https://player.vimeo.com/video/${project.vimeoId}?h=0&title=0&byline=0&portrait=0`}
+          <VideoFacade 
+            type="vimeo" 
+            videoId={project.vimeoId} 
             title={project.title}
-            frameborder="0"
-            allow="autoplay; fullscreen; picture-in-picture"
-            allowfullscreen
-            class="video-embed"
-          ></iframe>
+          />
         </div>
       )}
       
