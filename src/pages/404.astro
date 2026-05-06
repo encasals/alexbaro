@@ -1,0 +1,76 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout 
+  title="Page Not Found | Alex Baro"
+  description="The page you're looking for doesn't exist."
+>
+  <div class="not-found">
+    <div class="not-found-content">
+      <h1>404</h1>
+      <p class="message">Page not found</p>
+      <p class="description">The page you're looking for doesn't exist or has been moved.</p>
+      <a href="/" class="back-home">Back to Home</a>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .not-found {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .not-found-content {
+    max-width: 500px;
+  }
+
+  h1 {
+    font-size: 120px;
+    font-weight: 300;
+    color: #fff;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .message {
+    font-size: 24px;
+    color: #fff;
+    margin: 20px 0 10px;
+  }
+
+  .description {
+    font-size: 16px;
+    color: #999;
+    margin-bottom: 30px;
+  }
+
+  .back-home {
+    display: inline-block;
+    padding: 12px 24px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: background 0.2s ease;
+  }
+
+  .back-home:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  @media (max-width: 540px) {
+    h1 {
+      font-size: 80px;
+    }
+
+    .message {
+      font-size: 20px;
+    }
+  }
+</style>

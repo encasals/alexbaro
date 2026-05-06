@@ -131,6 +131,13 @@ if (preloadImage) {
       />
     )}
     
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    
+    <!-- Additional page-specific head content -->
+    <slot name="head" />
+    
     <style is:inline>
       @font-face {
         font-family: 'Inter';

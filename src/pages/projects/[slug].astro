@@ -24,6 +24,69 @@ const posterImage = await getImage({
   quality: 80,
   width: 1200 
 });
+
+const siteUrl = 'https://alexbaro.vercel.app';
+const projectUrl = `${siteUrl}/projects/${project.slug}`;
+const thumbnailUrl = `${siteUrl}${posterImage.src}`;
+
+// Structured data for video content (VideoObject schema)
+const videoSchema = project.videoFile ? {
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  "name": project.title,
+  "description": project.description || `${project.title} - A project by Alex Baro`,
+  "thumbnailUrl": thumbnailUrl,
+  "uploadDate": `${project.year}-01-01`,
+  "contentUrl": `${siteUrl}${project.videoFile}`,
+  "creator": {
+    "@type": "Person",
+    "name": "Alex Baro",
+    "jobTitle": "Comedy Director & Filmmaker",
+    "url": siteUrl
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Alex Baro",
+    "url": siteUrl
+  }
+} : null;
+
+// CreativeWork schema for non-video projects
+const creativeWorkSchema = !project.videoFile ? {
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  "name": project.title,
+  "description": project.description || `${project.title} - A project by Alex Baro`,
+  "image": thumbnailUrl,
+  "dateCreated": `${project.year}-01-01`,
+  "url": projectUrl,
+  "creator": {
+    "@type": "Person",
+    "name": "Alex Baro",
+    "jobTitle": "Comedy Director & Filmmaker",
+    "url": siteUrl
+  }
+} : null;
+
+// BreadcrumbList schema for navigation
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": siteUrl
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": project.title,
+      "item": projectUrl
+    }
+  ]
+};
 ---
 
 <Layout 
@@ -32,6 +95,15 @@ const posterImage = await getImage({
   ogImage={project.coverImage}
   type="article"
 >
+  <!-- Project-specific structured data -->
+  {videoSchema && (
+    <script type="application/ld+json" set:html={JSON.stringify(videoSchema)} slot="head" />
+  )}
+  {creativeWorkSchema && (
+    <script type="application/ld+json" set:html={JSON.stringify(creativeWorkSchema)} slot="head" />
+  )}
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} slot="head" />
+  
   <article class="project-page">
     <header class="project-header">
       <a href="/" class="back-link">&larr; Back to Work</a>
