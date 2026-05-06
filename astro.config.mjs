@@ -4,7 +4,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://alexbaro.vercel.app',
+  site: 'https://alexbaro.com',
   integrations: [
     sitemap({
       changefreq: 'weekly',
