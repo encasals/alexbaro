@@ -1,4 +1,5 @@
 ---
+import { Image, getImage } from 'astro:assets';
 import Layout from '../../layouts/Layout.astro';
 import { projects, getProjectBySlug } from '../../data/projects';
 import type { GetStaticPaths } from 'astro';
@@ -15,12 +16,20 @@ const { project } = Astro.props;
 if (!project) {
   return Astro.redirect('/404');
 }
+
+// Generate optimized poster image for video element (needs URL string)
+const posterImage = await getImage({ 
+  src: project.coverImage, 
+  format: 'webp',
+  quality: 80,
+  width: 1200 
+});
 ---
 
 <Layout 
   title={`${project.title} | Alex Baro`}
   description={project.description || `${project.title} - A project by Alex Baro`}
-  image={project.coverImage}
+  ogImage={project.coverImage}
   type="article"
 >
   <article class="project-page">
@@ -39,7 +48,7 @@ if (!project) {
           <video 
             controls 
             preload="metadata"
-            poster={project.coverImage}
+            poster={posterImage.src}
             class="video-player"
           >
             <source src={project.videoFile} type="video/mp4" />
@@ -76,7 +85,14 @@ if (!project) {
       
       {!project.videoFile && !project.youtubeId && !project.vimeoId && (
         <div class="no-video">
-          <img src={project.coverImage} alt={project.title} class="cover-image" />
+          <Image 
+            src={project.coverImage} 
+            alt={project.title} 
+            class="cover-image"
+            format="webp"
+            quality={80}
+            width={1200}
+          />
           <p>Video coming soon.</p>
         </div>
       )}

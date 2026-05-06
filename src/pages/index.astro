@@ -1,13 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import { projects } from '../data/projects';
+import { projects, defaultCoverImage } from '../data/projects';
 ---
 
 <Layout 
   title="Alex Baro | Comedy Director"
   description="Alex Baro is a comedy director and filmmaker based in London, creating short films, promos, and branded content."
-  preloadImage="/images/covers/01-falling-out.png"
+  preloadImage={defaultCoverImage}
+  showMasthead={true}
+  mastheadTitle="Alex Baro-Cayetano | Writer-Director"
 >
   <div class="project-covers">
     {projects.map((project, index) => (
@@ -29,15 +31,23 @@ import { projects } from '../data/projects';
     padding-top: 0;
   }
   
+  .project-covers:after {
+    clear: both;
+    content: '';
+    display: table;
+  }
+  
   @media (max-width: 932px) {
     .project-covers {
       padding: 0 5%;
+      padding-top: 0;
     }
   }
   
   @media (max-width: 540px) {
     .project-covers {
       padding: 0 5%;
+      padding-top: 0;
     }
   }
 </style>
