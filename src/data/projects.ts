@@ -26,6 +26,15 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    slug: "the-vessel",
+    title: "The Vessel",
+    year: "2026",
+    coverImage: fallingOut,
+    description: "Comedy short film project.",
+    videoFile: "/videos/falling-out.mp4",
+    aspectRatio: "landscape"
+  },
+  {
     slug: "falling-out",
     title: "Falling Out",
     year: "2023",
