@@ -31,6 +31,7 @@ const embedUrl = type === 'youtube'
   data-type={type}
   data-video-id={videoId}
   data-embed-url={embedUrl}
+  style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
 >
   {type === 'youtube' && thumbnail && (
     <img 
@@ -58,7 +59,9 @@ const embedUrl = type === 'youtube'
 
 <style>
   .video-facade {
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     cursor: pointer;

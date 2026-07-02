@@ -11,6 +11,7 @@ import keith from '../assets/images/covers/07-keith.jpg';
 import milkCookies from '../assets/images/covers/08-milk-cookies.jpg';
 import thePush from '../assets/images/covers/09-the-push.png';
 import comedyThings from '../assets/images/covers/10-comedy-things.jpg';
+import theVessel from '../assets/images/covers/11-the-vessel.jpg';
 
 export interface Project {
   slug: string;
@@ -29,9 +30,9 @@ export const projects: Project[] = [
     slug: "the-vessel",
     title: "The Vessel",
     year: "2026",
-    coverImage: fallingOut,
-    description: "Comedy short film project.",
-    videoFile: "/videos/falling-out.mp4",
+    coverImage: theVessel,
+    description: "Winner of the London SciFi 48h Challenge 2026.",
+    youtubeId: "GlsIpnb4zuU",
     aspectRatio: "landscape"
   },
   {
